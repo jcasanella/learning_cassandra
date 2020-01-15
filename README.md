@@ -31,3 +31,22 @@ docker pull datastax/dse-server:6.7.0
 docker pull datastax/dse-studio:6.7.0
 docker pull datastax/dse-opscenter:6.7.0
 ```
+### Running the containers
+
+Description of the arguments. Note all of them are common arguments to run a container.
+
+| Argument   |  Description |
+|----------|:------|
+| **-e** | Sets environment variables. Required to use: **DS_LICENSE=accept** |
+| **-d** | Starts the container in the background |
+| **-p** | Publish container ports on the host computer to allow remote access |
+| **-v** | Mount a directory on the local host to preserve the container data |
+| **-name** | Assigns a name to the container |
+
+#### Starting the DSE Server
+
+```
+docker container run -e DS_LICENSE=accept --name my-dse -d datastax/dse-server:6.7.0
+```
+
+By default only runs the **dse-server**, to enable the rest of services we must provide any of the following arguments.

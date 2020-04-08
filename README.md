@@ -53,7 +53,7 @@ Description of the arguments. Note all of them are common arguments to run a con
 #### Starting the DSE Server
 
 ```
-docker container run -e DS_LICENSE=accept --name my-dse --rm -d -p 9042:9042 -p 4040:4040 -p 7080:7080 -p 7081:7081 -p 8182:8182 -p 8983:8983 -p 8090:8090 -v data-cassandra:/var/lib/cassandra -v dse-analytics:/var/lib/spark -v data-dsefs:/var/lib/dsefs -v logs-cassandra:/var/log/cassandra -v logs-spark:/var/log/spark datastax/dse-server:6.7.0 
+docker container run -e DS_LICENSE=accept --name my-dse --rm -d -p 9042:9042 -p 4040:4040 -p 7080:7080 -p 7081:7081 -p 8182:8182 -p 8983:8983 -p 8090:8090 -v data-cassandra:/var/lib/cassandra -v dse-analytics:/var/lib/spark -v data-dsefs:/var/lib/dsefs -v logs-cassandra:/var/log/cassandra -v logs-spark:/var/log/spark -v ${pwd}/assets201:/data-csv datastax/dse-server:6.7.0 
 ```
 
 By default only runs the **dse-server**, to enable the rest of services we must provide any of the following arguments:

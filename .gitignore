@@ -1,0 +1,12 @@
+cassandra_connector/cassandra_connector.iml
+cassandra_connector/.idea/codeStyles
+cassandra_connector/.idea/compiler.xml
+cassandra_connector/.idea/dbnavigator.xml
+cassandra_connector/.idea/encodings.xml
+cassandra_connector/.idea/misc.xml
+cassandra_connector/.idea/sbt.xml
+cassandra_connector/.idea/vcs.xml
+cassandra_connector/.idea/workspace.xml
+cassandra_connector/target/classes/org/lean/cassandra/App.class
+cassandra_connector/target/classes/org/lean/cassandra/Cassandra.class
+cassandra_connector/target/test-classes/org/lean/cassandra/AppTest.class

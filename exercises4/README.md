@@ -1,12 +1,14 @@
-Drop your videos_by_tag table that you created in the previous exercise
+# Clustering
+
+1. Drop your videos_by_tag table that you created in the previous exercise
 
 ```
-use killrvideo;
-drop table videos_by_tag;
-desc tables;
+USE killrvideo;
+DROP TABLE videos_by_tag;
+DESC TABLES;
 ```
 
-create a new videos_by_tag table partitioned based on the tag. The table should also store the rows of each partition so that the newest videos are listed first within the partition.
+2. Create a new `videos_by_tag table` partitioned based on the `tag`. The table should also store the rows of each partition so that the newest videos are listed first within the partition.
 
 ```
 CREATE TABLE videos_by_tag (
@@ -18,17 +20,16 @@ CREATE TABLE videos_by_tag (
 WITH CLUSTERING ORDER BY (added_date DESC);
 ```
 
-Import the videos_by_tag.csv again via the COPY
+3. Import the videos_by_tag.csv again via the COPY
 
 ```
-docker cp .\assets201\videos-by-tag.csv my-dse:/opt/dse/data
-COPY videos_by_tag(tag, video_id, added_date, title) FROM '/opt/dse/data/videos-by-tag.csv' WITH HEADER = TRUE;
-select * from videos_by_tag;
+COPY videos_by_tag(tag, video_id, added_date, title) FROM '/data-csv/videos-by-tag.csv' WITH HEADER = TRUE;
+SELECT * FROM videos_by_tag;
  ```
 
- NOTE: Notice the rows are still grouped by their partition key value but ordered in descending order of added date.
+ **NOTE:** the rows are still grouped by their partition key value but ordered in descending order of added date.
 
- Execute your query again, but list the oldest videos first.
+ 4. Execute your query again, but list the oldest videos first.
 
  ```
  SELECT * FROM videos_by_tag ORDER BY added_date ASC;

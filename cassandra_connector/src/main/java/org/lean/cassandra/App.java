@@ -7,8 +7,14 @@ public class App
         System.out.println( "Starting Cassandra Connection" );
         Cassandra cassandra = new Cassandra("127.0.0.1", 9042);
 
-        boolean isPresent = cassandra.existKeySpace("killrvideo");
-        System.out.println(isPresent);
+        String keySpace = "killrvideo";
+
+        if (cassandra.existKeySpace(keySpace)) {
+            cassandra.showTable(keySpace, "videos");
+        } else {
+            System.out.println(String.format("%s keySpace not present", keySpace));
+        }
+
 
         cassandra.close();
     }

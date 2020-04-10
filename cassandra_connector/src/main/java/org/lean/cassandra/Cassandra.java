@@ -6,6 +6,7 @@ import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.Cluster.Builder;
 
+import javax.xml.transform.Result;
 import java.util.Optional;
 
 public class Cassandra {
@@ -33,11 +34,18 @@ public class Cassandra {
 
     public boolean existKeySpace(String keySpace) {
         ResultSet rs = session.execute("SELECT * FROM system_schema.keyspaces;");
-        Optional<Row> spaces = rs.all()
+        return rs.all()
                 .stream()
-                .filter(x -> x.getString(0).equalsIgnoreCase(keySpace))
-                .findFirst();
+                .anyMatch(x -> x.getString(0).equalsIgnoreCase(keySpace));
+    }
 
-        return spaces.isPresent();
+    public void showTable(String keySpace, String table) {
+        ResultSet rs = session.execute(String.format("USE %s", keySpace));
+        if (rs.isExhausted()) {
+            ResultSet rs2 = session.execute(String.format("SELECT * FROM %s", table));
+            for (Row r : rs2) {
+                System.out.println(r.getUUID(0) + " " + r.getTimestamp(1) + " " + r.getString(2));
+            }
+        }
     }
 }

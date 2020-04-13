@@ -1,0 +1,173 @@
+version: "3"
+services: 
+    node1:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_node1
+        hostname: node1
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.2
+        volumes: 
+            - data-cassandra:/var/lib/cassandra 
+            - dse-analytics:/var/lib/spark 
+            - data-dsefs:/var/lib/dsefs 
+            - logs-cassandra:/var/log/cassandra 
+            - logs-spark:/var/log/spark 
+            - ./assets201:/data-csv
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=DC1        # Check if we can use default
+            - RACK=rack1    # Check if we can use default
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+        expose:
+            - "4040" # Spark application web site port.
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "7080" # Spark Master console port.
+            - "7081" # Spark Worker web site port.
+            - "8182" # The gremlin server port for DSE Graph.
+            - "8983" # DSE Search (Solr) 
+            - "8090" # Spark Jobserver REST API port.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "18080" # Spark application history server web site port
+            - "7000" # DSE inter-node cluster communication port.
+            - "7199" # DSE JMX metrics monitoring port.
+        ports:
+            - "9042:9042" 
+            - "4040:4040" 
+            - "8182:8182" 
+            - "8983:8983"
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+    node2:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_node2
+        hostname: node2
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.3
+        volumes: 
+            - data-cassandra2:/var/lib/cassandra 
+            - dse-analytics2:/var/lib/spark 
+            - data-dsefs2:/var/lib/dsefs 
+            - logs-cassandra2:/var/log/cassandra 
+            - logs-spark2:/var/log/spark 
+            - ./assets201:/data-csv
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=DC1        # Check if we can use default
+            - RACK=rack1    # Check if we can use default
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+        expose:
+            - "4040" # Spark application web site port.
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "7080" # Spark Master console port.
+            - "7081" # Spark Worker web site port.
+            - "8182" # The gremlin server port for DSE Graph.
+            - "8983" # DSE Search (Solr) 
+            - "8090" # Spark Jobserver REST API port.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "18080" # Spark application history server web site port
+            - "7000" # DSE inter-node cluster communication port.
+            - "7199" # DSE JMX metrics monitoring port.
+        ports:
+            - "9043:9042" 
+            - "4041:4040" 
+            - "8183:8182" 
+            - "8984:8983"
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        depends_on:
+            - node1
+    node3:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_node3
+        hostname: node3
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.4
+        volumes: 
+            - data-cassandra3:/var/lib/cassandra 
+            - dse-analytics3:/var/lib/spark 
+            - data-dsefs3:/var/lib/dsefs 
+            - logs-cassandra3:/var/log/cassandra 
+            - logs-spark3:/var/log/spark 
+            - ./assets201:/data-csv
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=DC1        # Check if we can use default
+            - RACK=rack1    # Check if we can use default
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+        expose:
+            - "4040" # Spark application web site port.
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "7080" # Spark Master console port.
+            - "7081" # Spark Worker web site port.
+            - "8182" # The gremlin server port for DSE Graph.
+            - "8983" # DSE Search (Solr) 
+            - "8090" # Spark Jobserver REST API port.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "18080" # Spark application history server web site port
+            - "7000" # DSE inter-node cluster communication port.
+            - "7199" # DSE JMX metrics monitoring port.
+        ports:
+            - "9044:9042" 
+            - "4042:4040" 
+            - "8184:8182" 
+            - "8985:8983"
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        depends_on:
+            - node1
+
+networks:
+    dc1ring:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.30.0.0/16
+
+volumes:
+    data-cassandra:
+    dse-analytics:
+    data-dsefs:
+    logs-cassandra:
+    logs-spark:
+    data-cassandra2:
+    dse-analytics2:
+    data-dsefs2:
+    logs-cassandra2:
+    logs-spark2:
+    data-cassandra3:
+    dse-analytics3:
+    data-dsefs3:
+    logs-cassandra3:
+    logs-spark3:
+
+

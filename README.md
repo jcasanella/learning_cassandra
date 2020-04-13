@@ -71,51 +71,23 @@ docker container exec -it my-dse bash
 cqlsh
 ```
 
-Lets run some CQL: (Note: the following queries are extracted from https://dzone.com/articles/cassandra-data-modeling-primary-clustering-partiti)
+### Datastax Cluster
 
-**Create a new schema**
-
-A schema is similar to the database concept in a traditional database.
+In order to run a Datastax cluster, there's a docker-compose.
 
 ```
-create keyspace Student_Details with replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
-
-use student_details;
+docker-compose up -d
 ```
 
-Now, it's time to create a table and insert some data.
+### Todo
 
-```
--- Create the table
-CREATE TABLE student(stuid int, avg_marks float, description text, PRIMARY KEY(stuid));
+Add the rest of reservices to the docker-compose
+Test or add spark
 
--- show the existing tables in the schema
-DESC TABLES;
+### References
 
--- insert some data
- INSERT INTO student (stuid, avg_marks, description) VALUES (1, 25.5, 'student 1');
-INSERT INTO student (stuid, avg_marks, description) VALUES (2, 35.5, 'student 2');
-
--- check the content of the table
-SELECT * FROM student;
-
--- more info of the query to run
-EXPAND
-
--- to see the token created when row inserted
-SELECT token(stuid) FROM student;
-
-SELECT * FROM student WHERE stuid = 1; 
-```
-
-Create another table:
-
-```
--- Table with partition key (stuid) and cluster key (exam_date)
-CREATE TABLE marks(stuid int,exam_date timestamp,marks float, exam_name text, PRIMARY KEY (stuid,exam_date));
-
--- Insert some data
-INSERT INTO marks(stuid ,exam_date ,marks ,exam_name) VALUES (1,'2016-11-10',76 ,'examA');
-INSERT INTO marks(stuid ,exam_date ,marks ,exam_name) VALUES (1,'2016-11-11',90 ,'examB');
-INSERT INTO marks(stuid ,exam_date ,marks ,exam_name) VALUES (1,'2016-11-12',68 ,'examC');
-```
+* Create Datastax Cluster: https://medium.com/@kayaerol84/cassandra-cluster-management-with-docker-compose-40265d9de076
+* Reference Docker-compose: https://docs.docker.com/compose/compose-file/
+* Docker Datastax Server: https://hub.docker.com/r/datastax/dse-server
+* Ports Datastax: https://docs.datastax.com/en/security/6.7/security/secFirewallPorts.html#secFirewallPorts
+* How to start all the Datastax services: https://docs.datastax.com/en/dse/6.0/dse-admin/datastax_enterprise/operations/startStop/startDseStandalone.html

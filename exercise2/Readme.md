@@ -46,6 +46,13 @@ WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 DESCRIBE killrvideo;
 ```
 
+`Note:` if you run in a Datastax Cluster, change the replication factor. In this repository there's a docker-compose that builds a Datastax cluster.
+
+```
+CREATE KEYSPACE killrvideo
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+```
+
 Switch to the newly created keyspace
 
 ```

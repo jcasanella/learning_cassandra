@@ -1,0 +1,133 @@
+version: "3"
+services: 
+    node1-west:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_west_side_node1
+        hostname: node1-west
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.2
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1-west
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=west-side
+            - RACK=hakuna-matata
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+            - SNITCH=GossipingPropertyFileSnitch
+        expose:
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "7000" # DSE inter-node cluster communication port.
+        ports:
+            - "9042:9042" 
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+    node2-west:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_west_side_node2
+        hostname: node2-west
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.3
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1-west
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=west-side
+            - RACK=hakuna-matata
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+            - SNITCH=GossipingPropertyFileSnitch
+        expose:
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "7000" # DSE inter-node cluster communication port.
+        ports:
+            - "9043:9042" 
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        depends_on:
+            - node1-west
+    node1-east:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_east_side_node1
+        hostname: node1-east
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.4
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1-east
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=east-side
+            - RACK=hakuna-matata
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+            - SNITCH=GossipingPropertyFileSnitch
+        expose:
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "7000" # DSE inter-node cluster communication port.
+        ports:
+            - "9044:9042" 
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+    node2-east:
+        image: datastax/dse-server:6.7.0 
+        container_name: dse6_east_side_node2
+        hostname: node2-east
+        networks:
+            dc1ring:
+                ipv4_address: 172.30.0.5
+        environment: 
+            - DS_LICENSE=accept
+            - SEEDS=node1-east
+            - START_RPC=false
+            - CLUSTER_NAME=ds6_cluster
+            - NUM_TOKENS=3
+            - DC=east-side
+            - RACK=hakuna-matata
+            - JVM_EXTRA_OPTS=-Xms1024m -Xmx2048m
+            - SNITCH=GossipingPropertyFileSnitch
+        expose:
+            - "5598" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "5599" # Public/internode ports for DSE File System (DSEFS) clients.
+            - "9042" # DSE database native clients port.
+            - "9091" # The DataStax Studio server port.
+            - "9077" # AlwaysOn SQL WebUI port.
+            - "7000" # DSE inter-node cluster communication port.
+        ports:
+            - "9045:9042" 
+        ulimits:
+            memlock: -1
+            nproc: 32768
+            nofile: 100000
+        depends_on:
+            - node1-east
+
+networks:
+    dc1ring:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.30.0.0/16

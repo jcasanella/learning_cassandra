@@ -1,7 +1,8 @@
 version: "3"
 services: 
     node1-west:
-        image: datastax/dse-server:6.7.0 
+        build: .
+        image: jcasanella/dse-server:6.7.0 
         container_name: dse6_west_side_node1
         hostname: node1-west
         networks:
@@ -39,7 +40,7 @@ services:
             nproc: 32768
             nofile: 100000
     node2-west:
-        image: datastax/dse-server:6.7.0 
+        image: jcasanella/dse-server:6.7.0 
         container_name: dse6_west_side_node2
         hostname: node2-west
         networks:
@@ -78,8 +79,10 @@ services:
             nofile: 100000
         depends_on:
             - node1-west
+        command: [ "-c", "/opt/./wait-for.sh node1-west:9042 5 && /entrypoint.sh dse cassandra -f" ] 
+        entrypoint: ["/bin/sh"]
     node1-east:
-        image: datastax/dse-server:6.7.0 
+        image: jcasanella/dse-server:6.7.0 
         container_name: dse6_east_side_node1
         hostname: node1-east
         networks:
@@ -116,8 +119,12 @@ services:
             memlock: -1
             nproc: 32768
             nofile: 100000
+        depends_on: 
+            - node2-west
+        command: [ "-c", "/opt/./wait-for.sh node2-west:9042 10 && /entrypoint.sh dse cassandra -f" ] 
+        entrypoint: ["/bin/sh"]
     node2-east:
-        image: datastax/dse-server:6.7.0 
+        image: jcasanella/dse-server:6.7.0 
         container_name: dse6_east_side_node2
         hostname: node2-east
         networks:
@@ -163,6 +170,8 @@ services:
             nofile: 100000
         depends_on:
             - node1-east
+        command: [ "-c", "/opt/./wait-for.sh node1-east:9042 15 && /entrypoint.sh dse cassandra -f" ] 
+        entrypoint: ["/bin/sh"]
 networks:
     dc1ring:
         ipam:
